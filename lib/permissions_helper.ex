@@ -1,6 +1,22 @@
 defmodule SimpleRbac.PermissionsHelper do
   @moduledoc """
-  Provides permission checking functionality through a macro.
+  Provides permission checking functionality through macros and helper functions.
+
+  This module implements the core permission checking logic, supporting:
+  - Exact permission matching
+  - Wildcard permissions using "*"
+  - Action-scope based permissions
+
+  ## Permission Format
+
+  Permissions follow the format: `"action:scope"`
+
+  Examples:
+  - `"read:users"`
+  - `"write:posts"`
+  - `"delete:comments"`
+  - `"*:posts"` (wildcard for any action on posts)
+  - `"*:*"` (superuser access)
   """
 
   defmacro __using__(_opts) do
@@ -12,13 +28,20 @@ defmodule SimpleRbac.PermissionsHelper do
   @doc """
   Checks if a user has a specific permission.
 
+  Supports exact matches and wildcard permissions using "*".
+
   ## Parameters
     - current_user: The user struct containing permission_list
-    - permission: String representing the permission to check
+    - permission: String representing the permission to check in format "action:scope"
 
   ## Examples
-      iex> has_permission?(current_user, "admin.users.read")
+      iex> user = %{permission_list: ["read:admin", "*:posts"]}
+      iex> has_permission?(user, "read:admin")
       true
+      iex> has_permission?(user, "write:posts")
+      true
+      iex> has_permission?(user, "delete:users")
+      false
   """
   def has_permission?(%{permission_list: permissions}, permission) when is_list(permissions) do
     permission in permissions ||
@@ -28,7 +51,18 @@ defmodule SimpleRbac.PermissionsHelper do
 
   def has_permission?(_user, _permission), do: false
 
+  @doc """
+  Extracts the model scope from a permission string.
+  """
   defp model_scope(permission), do: String.split(permission, ":") |> List.last()
+
+  @doc """
+  Creates a wildcard permission for a specific scope.
+  """
   defp star_scope(permission), do: "*:#{model_scope(permission)}"
+
+  @doc """
+  Returns the superuser wildcard permission.
+  """
   defp all_scope, do: "*:*"
 end

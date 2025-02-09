@@ -1,4 +1,18 @@
 defmodule Mix.Tasks.SimpleRbac.Setup do
+  @moduledoc """
+  Sets up SimpleRbac by creating necessary database migrations.
+
+  Run this task to generate the required database tables for SimpleRbac:
+  ```bash
+  mix simple_rbac.setup
+  ```
+
+  This will create migrations for:
+  - Permissions table
+  - Roles table
+  - Role-Permission associations table
+  """
+
   use Mix.Task
 
   @shortdoc "Sets up SimpleRbac by creating necessary migrations"
@@ -26,12 +40,7 @@ defmodule Mix.Tasks.SimpleRbac.Setup do
 
     Mix.shell().info([:green, "\n✓ SimpleRbac migrations generated successfully!"])
 
-    Mix.shell().info("""
-
-    Next steps:
-    1. Review the generated migration in #{@migrations_path}
-    2. Run the migration with: mix ecto.migrate
-    """)
+    print_post_setup_instructions()
   end
 
   defp create_migration(name, content) do
@@ -98,5 +107,33 @@ defmodule Mix.Tasks.SimpleRbac.Setup do
     Mix.Project.config()[:app]
     |> to_string()
     |> Macro.camelize()
+  end
+
+  defp print_post_setup_instructions do
+    Mix.shell().info("""
+
+    🎉 SimpleRbac setup completed!
+
+    Next steps:
+
+    1. Configure your Repo in config/config.exs:
+       ```elixir
+       config :simple_rbac,
+         repo: YourApp.Repo
+       ```
+
+    2. Run the migrations:
+       ```bash
+       mix ecto.migrate
+       ```
+
+    3. Start using SimpleRbac in your controllers/live views:
+       ```elixir
+       use SimpleRbac.PermissionsHelper
+       ```
+
+    For more information, check the documentation at:
+    https://hexdocs.pm/simple_rbac
+    """)
   end
 end
