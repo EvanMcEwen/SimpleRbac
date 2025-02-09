@@ -56,6 +56,9 @@ defmodule YourAppWeb.AdminController do
 end
 ```
 
+I'm currently assuming that you have inside of your `current_user` map a list called `permissions_list` that is simply a list of all the permissions the user has been granted.
+Currently working on documentation and code to help facilitate this.
+
 ### Permission Format
 
 Permissions are defined in the format `"action:scope"`, where:
