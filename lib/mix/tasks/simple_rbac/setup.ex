@@ -14,15 +14,18 @@ defmodule Mix.Tasks.SimpleRbac.Setup do
     case create_migration("create_rbac_tables", create_rbac_tables_template()) do
       :ok ->
         Mix.shell().info([:green, "• Created RBAC tables migration"])
+
       {:error, reason} ->
         Mix.shell().error("""
         Failed to create RBAC tables migration!
         Error: #{inspect(reason)}
         """)
+
         exit({:shutdown, 1})
     end
 
     Mix.shell().info([:green, "\n✓ SimpleRbac migrations generated successfully!"])
+
     Mix.shell().info("""
 
     Next steps:
@@ -60,32 +63,32 @@ defmodule Mix.Tasks.SimpleRbac.Setup do
       use Ecto.Migration
 
       def change do
-        create table(:permissions) do
+        create table(:simple_rbac_permissions) do
           add :name, :string, null: false
           add :description, :string, null: false
 
           timestamps(type: :utc_datetime)
         end
 
-        create unique_index(:permissions, [:name])
+        create unique_index(:simple_rbac_permissions, [:name])
 
-        create table(:roles) do
+        create table(:simple_rbac_roles) do
           add :name, :string, null: false
 
           timestamps(type: :utc_datetime)
         end
 
-        create unique_index(:roles, [:name])
+        create unique_index(:simple_rbac_roles, [:name])
 
-        create table(:role_permissions) do
-          add :role_id, references(:roles, on_delete: :nothing)
-          add :permission_id, references(:permissions, on_delete: :nothing)
+        create table(:simple_rbac_role_permissions) do
+          add :role_id, references(:simple_rbac_roles, on_delete: :nothing)
+          add :permission_id, references(:simple_rbac_permissions, on_delete: :nothing)
 
           timestamps(type: :utc_datetime)
         end
 
-        create index(:role_permissions, [:role_id])
-        create index(:role_permissions, [:permission_id])
+        create index(:simple_rbac_role_permissions, [:role_id])
+        create index(:simple_rbac_role_permissions, [:permission_id])
       end
     end
     """

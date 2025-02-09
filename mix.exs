@@ -7,7 +7,8 @@ defmodule SimpleRbac.MixProject do
       version: "0.1.0",
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
-      description: "A very simple role based access control (RBAC) library for Phoenix LiveView applications.",
+      description:
+        "A very simple role based access control (RBAC) library for Phoenix LiveView applications.",
       deps: deps()
     ]
   end
