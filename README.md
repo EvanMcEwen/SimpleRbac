@@ -72,6 +72,8 @@ Examples:
 - `"*:admin"` - All actions in admin scope
 - `"*:*"` - Superuser access (all actions in all scopes)
 
+Note: The superadmin permission (`"*:*"`) is automatically created during setup for your convenience.
+
 ### Managing Roles and Permissions
 
 SimpleRbac provides contexts for managing roles and permissions:
