@@ -81,6 +81,12 @@ defmodule Mix.Tasks.SimpleRbac.Setup do
 
         create unique_index(:simple_rbac_permissions, [:name])
 
+        # Insert superadmin permission
+        execute(
+          "INSERT INTO simple_rbac_permissions (name, description, inserted_at, updated_at) VALUES ('*:*', 'Superadmin permission with full access to all resources', NOW(), NOW())",
+          "DELETE FROM simple_rbac_permissions WHERE name = '*:*'"
+        )
+
         create table(:simple_rbac_roles) do
           add :name, :string, null: false
 
@@ -117,20 +123,17 @@ defmodule Mix.Tasks.SimpleRbac.Setup do
     Next steps:
 
     1. Configure your Repo in config/config.exs:
-       ```elixir
+
        config :simple_rbac,
          repo: YourApp.Repo
-       ```
 
     2. Run the migrations:
-       ```bash
+
        mix ecto.migrate
-       ```
 
     3. Start using SimpleRbac in your controllers/live views:
-       ```elixir
+
        use SimpleRbac.PermissionsHelper
-       ```
 
     For more information, check the documentation at:
     https://hexdocs.pm/simple_rbac
