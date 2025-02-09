@@ -51,18 +51,7 @@ defmodule SimpleRbac.PermissionsHelper do
 
   def has_permission?(_user, _permission), do: false
 
-  @doc """
-  Extracts the model scope from a permission string.
-  """
   defp model_scope(permission), do: String.split(permission, ":") |> List.last()
-
-  @doc """
-  Creates a wildcard permission for a specific scope.
-  """
   defp star_scope(permission), do: "*:#{model_scope(permission)}"
-
-  @doc """
-  Returns the superuser wildcard permission.
-  """
   defp all_scope, do: "*:*"
 end
