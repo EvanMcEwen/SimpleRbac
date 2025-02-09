@@ -56,18 +56,32 @@ defmodule SimpleRbac.Permissions do
   def get_permission!(id), do: repo().get!(Permission, id)
 
   @doc """
-  Creates a permission.
+  Creates a new permission with the given action and scope.
+
+  ## Parameters
+    - action: The action part of the permission (e.g., "read", "write", "delete")
+    - scope: The scope part of the permission (e.g., "posts", "users", "admin")
+    - description: A human-readable description of the permission
 
   ## Examples
 
-      iex> create_permission(%{field: value})
+      iex> create_permission("read", "posts", "Can read blog posts")
       {:ok, %Permission{}}
 
-      iex> create_permission(%{field: bad_value})
+      iex> create_permission("", "posts", "Invalid permission")
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_permission(attrs \\ %{}) do
+  def create_permission(action, scope, description) do
+    permission_name = "#{action}:#{scope}"
+
+    create_permission_record(%{
+      name: permission_name,
+      description: description
+    })
+  end
+
+  defp create_permission_record(attrs) do
     %Permission{}
     |> Permission.changeset(attrs)
     |> repo().insert()

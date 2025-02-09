@@ -84,10 +84,7 @@ alias SimpleRbac.Permissions
 {:ok, admin_role} = Roles.create_role(%{name: "admin"})
 
 # Create permissions
-{:ok, read_posts} = Permissions.create_permission(%{
-  name: "read:posts",
-  description: "Can read blog posts"
-})
+{:ok, read_posts} = Permissions.create_permission("read", "posts", "Can read blog posts")
 
 # Associate permissions with roles through role_permissions
 {:ok, _} = SimpleRbac.RolePermissions.create_role_permission(%{

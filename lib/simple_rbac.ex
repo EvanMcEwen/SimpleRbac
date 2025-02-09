@@ -30,6 +30,15 @@ defmodule SimpleRbac do
 
   ## Usage
 
+  Permissions can be created using the create_permission/3 function:
+
+      ```elixir
+      alias SimpleRbac.Permissions
+
+      # Create a new permission
+      {:ok, permission} = Permissions.create_permission("read", "admin", "Can access admin section")
+      ```
+
   Add the permission checker to your controllers or LiveView modules:
 
       ```elixir
